@@ -1,34 +1,42 @@
 require 'rake'
-require 'rake/testtask'
-require 'rake/rdoctask'
 
 begin
   require 'metric_fu'
 rescue LoadError
 end
 
-Rake::TestTask.new do |t|
-  t.libs << 'lib'
-  t.pattern = 'test/**/test_*.rb'
-  t.verbose = true
-end
+begin
+  require 'spec/rake/spectask'
 
-Rake::RDocTask.new do |rdoc|
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'jekyll'
-  rdoc.options << '--line-numbers' << '--inline-source'
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('lib/**/*.rb')
+  Spec::Rake::SpecTask.new("spec") do |t|
+    t.spec_files = FileList['spec/**/*_spec.rb']
+    t.spec_opts = ['--color']
+  end
+
+  task :test do
+    Rake::Task['spec'].invoke
+  end
+
+  Spec::Rake::SpecTask.new("rcov_spec") do |t|
+    t.spec_files = FileList['spec/**/*_spec.rb']
+    t.spec_opts = ['--color']
+    t.rcov = true
+    t.rcov_opts = ['--exclude', '^spec,/gems/']
+  end
 end
 
 begin
-  require 'rcov/rcovtask'
-  Rcov::RcovTask.new do |t|
-    t.libs << 'test'
-    t.test_files = FileList['test/**/test_*.rb']
-    t.verbose = true
+  require 'jeweler'
+  Jeweler::Tasks.new do |gemspec|
+    gemspec.name        = 'boo-box'
+    gemspec.summary     = 'Ruby wrapper on the boo-box API'
+    gemspec.email       = 'jeffry@jeffrydegrande.com'
+    gemspec.homepage    = 'http;//github.com/jeffrydegrande/boo-box'
+    gemspec.description = "Tiny ruby wrapper on the boo-box API"
+    gemspec.authors     = ["Jeffry Degrande"]
   end
 rescue LoadError
+  puts "Jeweler nto available. Install it with: sudo gem install technicalpickles-jeweler"
 end
 
 task :default => [:test]
