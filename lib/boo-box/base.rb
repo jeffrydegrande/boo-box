@@ -1,7 +1,7 @@
 module BooBox
   class Base
-    attr_reader :endpoint, :format, :tags, :limit
-    attr_accessor :uid, :aff
+    attr_reader :endpoint, :format
+    attr_accessor :uid, :aff, :tags, :limit
 
     def initialize
       @endpoint = 'http://boo-box.com/api'
