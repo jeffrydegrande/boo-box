@@ -28,8 +28,12 @@ module BooBox
     end
 
     def fetch_data
-      response = (get_http uri)
-      response.body
+      begin
+        response = (get_http uri)
+        response.body
+      rescue Net::HTTPFatalError => e 
+        raise RuntimeError, "HTTP error occurred: #{e.to_s}"
+      end
     end
 
     def get_http(url, max_retry = 10)

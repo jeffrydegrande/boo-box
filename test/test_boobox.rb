@@ -26,5 +26,12 @@ class TestBoobox < Test::Unit::TestCase
       assert products.length <= @boo.limit && products.length > 0
       products.each { |product| assert product.is_a?(BooBox::Product) }
     end
+
+    should "throw an error on invalid affiliate id" do
+      @boo.aff = 'foobar'
+      assert_raises(RuntimeError) do
+        @boo.products
+      end
+    end
   end
 end
