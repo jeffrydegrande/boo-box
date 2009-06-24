@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe BooBox::Base do
   before do
     @boo = BooBox::Base.new
-    @boo.aff = 'submarinoid'
+    @boo.affiliate = 'submarino'
     @boo.uid = 173091
     @boo.tags = ['ruby on rails']
   end
@@ -27,8 +27,12 @@ describe BooBox::Base do
     end
   end
 
-  it 'should throw an error on invalid affiliate id' do
-    @boo.aff = 'foobar'
-    lambda{ @boo.products }.should raise_error(RuntimeError)
+  it 'should allow to set a valid affiliate id' do
+    lambda { @boo.affiliate = 'submarino' }.should_not raise_error(BooBox::InvalidAffiliate)
   end
+
+  it 'should not allow to set an invalid affiliate id' do
+    lambda { @boo.affiliate = 'foobar' }.should raise_error(BooBox::InvalidAffiliate)
+  end
+
 end

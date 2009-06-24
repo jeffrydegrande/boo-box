@@ -1,7 +1,26 @@
 module BooBox
+  class InvalidAffiliate < StandardError; end
   class Base
+    class << self
+      def affiliate_program symbol
+        ({
+          :americanas   => "americanasid",
+          :amazon       => "amazonid",
+          :amazonuk     => "amazonukid",
+          :amazonjp     => "amazonjpid",
+          :amazonfr     => "amazonfrid",
+          :amazonde     => "amazondeid",
+          :buscape      => "buscapeid",
+          :ebay         => "ebayid",
+          :jacotei      => "jacoteiid",
+          :mercadolivre => "mercadolivreid",
+          :submarino    => "submarinoid"
+        }[symbol.to_sym]) or raise InvalidAffiliate.new 
+      end
+    end
+
     attr_reader :endpoint, :format
-    attr_accessor :uid, :aff, :tags, :limit
+    attr_accessor :uid, :affiliate, :tags, :limit
 
     def initialize
       @endpoint = 'http://boo-box.com/api'
@@ -10,8 +29,12 @@ module BooBox
       @tags     = []
     end
 
+    def affiliate=(affiliate)
+      @affiliate = Base.affiliate_program affiliate
+    end
+
     def uri
-      "#{endpoint}/format:#{format.to_s}/aff:#{aff}/uid:#{uid}/tags:#{CGI.escape([tags].flatten.join(','))}/limit:#{limit}"
+      "#{endpoint}/format:#{format.to_s}/aff:#{affiliate}/uid:#{uid}/tags:#{CGI.escape([tags].flatten.join(','))}/limit:#{limit}"
     end
 
     def products 
