@@ -21,7 +21,7 @@ class TestProduct < Test::Unit::TestCase
 
     should "have a valid image" do
       assert @product.respond_to? :image
-      assert_equal @product.image, "http://i.s8.com.br/images/books/cover_tn/img4/pq1963064.jpk"
+      assert_equal @product.image, "http://i.s8.com.br/images/books/cover_tn/img4/pq1963064.jpg"
     end
 
     should "have a valid url" do
